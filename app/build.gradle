@@ -26,4 +26,5 @@ dependencies {
     compile 'com.google.android.gms:play-services:7.3.0'
     compile project(':jokeslib')
     compile project(':displayjokes')
+    compile project(path: ':backend', configuration: 'android-endpoints')
 }

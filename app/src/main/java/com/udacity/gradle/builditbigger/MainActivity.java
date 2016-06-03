@@ -47,7 +47,6 @@ public class MainActivity extends ActionBarActivity {
         Intent intent = new Intent(this, DisplayJoke.class);
         intent.putExtra(DisplayJoke.JOKE_INTENT_KEY, JokeRepo.getJoke());
         startActivity(intent);
-        //Toast.makeText(this, JokeRepo.getJoke(), Toast.LENGTH_SHORT).show();
     }
 
 
