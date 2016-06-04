@@ -1,7 +1,9 @@
 package com.udacity.gradle.builditbigger;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v4.util.Pair;
 import android.os.Bundle;
@@ -56,23 +58,30 @@ public class MainActivity extends Activity {
     }
 
     public void tellJoke(View view){
-        /*
-        Intent intent = new Intent(this, DisplayJoke.class);
-        intent.putExtra(DisplayJoke.JOKE_INTENT_KEY, JokeRepo.getJoke());
-        startActivity(intent);
-        */
-        new EndpointsAsyncTask().execute(new Pair<Context, String>(this, "Ankur"));
+        new EndpointsAsyncTask(this).execute(new Pair<Context, String>(this, ""));
     }
 
 
     //GCE Module Test
     class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> {
+        private ProgressDialog dialog;
+
         private MyApi myApiService = null;
         private Context context;
 
+        public EndpointsAsyncTask(Activity activity){
+            dialog = new ProgressDialog(activity);
+        }
+
+        @Override
+        protected void onPreExecute(){
+            super.onPreExecute();
+            dialog.setMessage("Getting a fresh Joke !!");
+            dialog.show();
+        }
+
         @Override
         protected String doInBackground(Pair<Context, String>... params) {
-            Log.v(NAME, "In doInBackground");
             if(myApiService == null) {
                 /*
                 MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
@@ -104,8 +113,11 @@ public class MainActivity extends Activity {
 
         @Override
         protected void onPostExecute(String result) {
-            Log.v(NAME, "In onPostExecute "+result);
-            Toast.makeText(context, result, Toast.LENGTH_LONG).show();
+            //Toast.makeText(context, result, Toast.LENGTH_LONG).show();
+            dialog.dismiss();
+            Intent intent = new Intent(getApplicationContext(), DisplayJoke.class);
+            intent.putExtra(DisplayJoke.JOKE_INTENT_KEY, result);
+            startActivity(intent);
         }
     }
 }
